@@ -8,14 +8,6 @@ spec:
     - key: ADMIN_PASSWORD
       value: "%(password)s"
 ---
-apiVersion: codemowers.io/v1alpha1
-kind: MysqlDatabase
-metadata:
-  name: etherpad
-spec:
-  capacity: 1Gi
-  class: shared
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -45,25 +37,16 @@ spec:
             - name: DB_TYPE
               value: mysql
             - name: DB_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: mysql-database-etherpad-owner-secrets
-                  key: MYSQL_PRIMARY
+              value: mysql-standalone
             - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: mysql-database-etherpad-owner-secrets
-                  key: MYSQL_DATABASE
+              value: etherpad
             - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: mysql-database-etherpad-owner-secrets
-                  key: MYSQL_USER
+              value: root
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: mysql-database-etherpad-owner-secrets
-                  key: MYSQL_PASSWORD
+                  name: mysql-standalone-secrets
+                  key: rootPassword
             - name: PAD_OPTIONS_NO_COLORS
               value: "true"
             - name: PAD_OPTIONS_USE_MONOSPACE_FONT
